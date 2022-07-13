@@ -699,6 +699,10 @@ void manage_response(bool move_axes, bool turn_off_nozzle, uint8_t move)
 					  y_position_bckp = current_position[Y_AXIS];
 				  
 					  //lift z
+#if defined(G60_G61) and defined(MMU_G61_SAFE_Z)
+					  // return to Z persisted by the slicer at layer change
+					  enquecommand_front_P(PSTR("G61 Z"));
+#endif
 					  current_position[Z_AXIS] += Z_PAUSE_LIFT;
 					  if (current_position[Z_AXIS] > Z_MAX_POS) current_position[Z_AXIS] = Z_MAX_POS;
 					  plan_buffer_line_curposXYZE(15);

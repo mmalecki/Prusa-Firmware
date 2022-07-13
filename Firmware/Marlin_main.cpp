@@ -5024,6 +5024,23 @@ eeprom_update_word((uint16_t*)EEPROM_NOZZLE_DIAMETER_uM,0xFFFF);
 #endif // Z_PROBE_SLED
 #endif // ENABLE_AUTO_BED_LEVELING
             
+#ifdef G60_G61
+    case 60:
+	memcpy(saved_pos, current_position, sizeof(saved_pos));
+        break;
+    case 61:
+	if (code_seen('E'))
+	    current_position[E_AXIS] = saved_pos[E_AXIS];
+	if (code_seen('X'))
+	    current_position[X_AXIS] = saved_pos[X_AXIS];
+	if (code_seen('Y'))
+	    current_position[Y_AXIS] = saved_pos[Y_AXIS];
+	if (code_seen('Z'))
+	    current_position[Z_AXIS] = saved_pos[Z_AXIS];
+	plan_buffer_line_curposXYZE(3000 / 60);
+	st_synchronize();
+        break;
+#endif
 #ifdef MESH_BED_LEVELING
 
     /*!
